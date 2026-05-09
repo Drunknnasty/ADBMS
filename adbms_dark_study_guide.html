@@ -1,0 +1,466 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{background:#0f1117;min-height:100vh;padding:16px;font-family:var(--font-sans,sans-serif);color:#e8e6f0}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+.nav{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid #2a2d3a;margin-bottom:20px}
+.nb{font-size:12px;padding:6px 13px;border:1px solid #2a2d3a;border-radius:20px;cursor:pointer;background:#181c27;color:#9b97b8;transition:all .15s;letter-spacing:.01em}
+.nb:hover{background:#1e2235;color:#c8c4e0}
+.nb.active{background:#2d2660;border-color:#7f77dd;color:#afa9ec;font-weight:500}
+
+.section{display:none}
+.section.active{display:block}
+
+.card{border:1px solid #2a2d3a;border-radius:14px;padding:20px 22px;margin-bottom:14px;background:#181c27}
+.card-title{font-size:15px;font-weight:500;color:#e8e6f0;margin-bottom:3px}
+.card-sub{font-size:12px;color:#6b6884;margin-bottom:14px}
+
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.ti-box{background:#0f1117;border:1px solid #2a2d3a;border-radius:10px;padding:12px 14px}
+.ti-label{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#6b6884;margin-bottom:6px}
+.ti-body{font-size:13px;line-height:1.55;color:#c5c1dd}
+
+.alert{border-radius:0;padding:10px 14px;margin-top:10px;font-size:13px;line-height:1.55;border-left:3px solid}
+.aw{background:#1e1608;color:#d4a84a;border-color:#854f0b}
+.ai{background:#16152a;color:#afa9ec;border-color:#534ab7}
+.ad{background:#1c0f0f;color:#f09595;border-color:#a32d2d}
+.as{background:#0d1a0d;color:#97c459;border-color:#3b6d11}
+
+.table-wrap{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#0f1117;font-weight:500;text-align:left;padding:8px 10px;border-bottom:1px solid #2a2d3a;color:#9b97b8;font-size:12px;letter-spacing:.03em}
+td{padding:8px 10px;border-bottom:1px solid #1e2235;vertical-align:top;color:#c5c1dd}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500}
+.t-rb{background:#1c0f0f;color:#f09595;border:1px solid #a32d2d}
+.t-rf{background:#0d1a0d;color:#97c459;border:1px solid #3b6d11}
+.t-no{background:#151619;color:#6b6884;border:1px solid #2a2d3a}
+
+.stabs{display:flex;gap:6px;margin-bottom:12px}
+.stab{font-size:12px;padding:5px 13px;border:1px solid #2a2d3a;border-radius:20px;cursor:pointer;background:#0f1117;color:#6b6884;transition:all .12s}
+.stab:hover{background:#1e2235;color:#c8c4e0}
+.stab.active{background:#0d1e18;border-color:#0f6e56;color:#5dcaa5;font-weight:500}
+
+.sp{display:none}
+.sp.active{display:block}
+
+.stag{font-size:11px;font-weight:500;padding:3px 10px;border-radius:10px;background:#1e1a3a;color:#afa9ec;border:1px solid #534ab7;margin-bottom:14px;display:inline-block;letter-spacing:.02em}
+
+.quiz-q{font-size:14px;font-weight:500;margin-bottom:13px;line-height:1.55;color:#e8e6f0}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.qopt{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;border:1px solid #2a2d3a;border-radius:10px;cursor:pointer;font-size:13px;line-height:1.45;background:#0f1117;color:#c5c1dd;transition:all .12s}
+.qopt:hover:not(.dis){background:#1e2235;border-color:#3d3a55}
+.qopt.correct{background:#0d1a0d;border-color:#3b6d11;color:#97c459}
+.qopt.wrong{background:#1c0f0f;border-color:#a32d2d;color:#f09595}
+.qopt.dis{cursor:default}
+.qlet{display:flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:6px;background:#1e2235;font-size:11px;font-weight:500;color:#6b6884;flex-shrink:0;margin-top:1px}
+.qopt.correct .qlet{background:#1a2e1a;color:#97c459}
+.qopt.wrong .qlet{background:#2e1a1a;color:#f09595}
+.qfb{font-size:13px;line-height:1.55;padding:11px 14px;border-radius:10px;margin-bottom:10px}
+.qnxt{font-size:13px;padding:8px 18px;border:1px solid #2a2d3a;border-radius:10px;cursor:pointer;background:#1e2235;color:#c5c1dd;display:none;transition:all .12s}
+.qnxt:hover{background:#2a2d3a}
+.qprog{font-size:12px;color:#6b6884;margin-bottom:14px}
+.qscore{font-size:20px;font-weight:500;text-align:center;padding:28px;color:#e8e6f0}
+
+.wfg-wrap{background:#0f1117;border:1px solid #2a2d3a;border-radius:10px;padding:14px;margin:10px 0}
+.wfg-svg{width:100%;display:block}
+#wfg-info{font-size:13px;line-height:1.55;padding:10px 14px;border-radius:10px;margin-top:8px;display:none;background:#16152a;color:#afa9ec;border-left:3px solid #534ab7}
+
+.divider{height:1px;background:#2a2d3a;margin:16px 0}
+
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.badge{font-size:12px;padding:4px 11px;border-radius:8px;border:1px solid}
+.b-p{background:#1e1a3a;color:#afa9ec;border-color:#534ab7}
+.b-t{background:#0d1e18;color:#5dcaa5;border-color:#0f6e56}
+.b-a{background:#1e1608;color:#d4a84a;border-color:#854f0b}
+.b-r{background:#1c0f0f;color:#f09595;border-color:#a32d2d}
+
+code{background:#1e2235;color:#afa9ec;padding:2px 6px;border-radius:5px;font-size:12px;font-family:var(--font-mono,monospace)}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">ADBMS Exam Study Guide — dark theme interactive review covering deadlock detection, database recovery, distributed databases, and fragmentation</h2>
+
+<div class="nav">
+  <button class="nb active" onclick="showSec('deadlock',this)"><i class="ti ti-git-branch" aria-hidden="true" style="font-size:13px;margin-right:5px"></i>Deadlock</button>
+  <button class="nb" onclick="showSec('recovery',this)"><i class="ti ti-database" aria-hidden="true" style="font-size:13px;margin-right:5px"></i>DB Recovery</button>
+  <button class="nb" onclick="showSec('distributed',this)"><i class="ti ti-network" aria-hidden="true" style="font-size:13px;margin-right:5px"></i>Distributed DB</button>
+  <button class="nb" onclick="showSec('fragmentation',this)"><i class="ti ti-layout-distribute-vertical" aria-hidden="true" style="font-size:13px;margin-right:5px"></i>Fragmentation</button>
+  <button class="nb" onclick="showSec('quiz',this)"><i class="ti ti-target" aria-hidden="true" style="font-size:13px;margin-right:5px"></i>Recall Quiz</button>
+</div>
+
+<div id="sec-deadlock" class="section active">
+  <span class="stag">Week 6 — Deadlock Detection & Recovery</span>
+
+  <div class="card">
+    <div class="card-title">What is a deadlock?</div>
+    <div class="card-sub">The mental model you need before anything else</div>
+    <div class="trio">
+      <div class="ti-box">
+        <div class="ti-label">Definition</div>
+        <div class="ti-body">Two or more transactions each waiting for locks held by the other — an infinite stall with no way out.</div>
+      </div>
+      <div class="ti-box">
+        <div class="ti-label">Real-world analogy</div>
+        <div class="ti-body">Two cars at a narrow one-lane bridge, each waiting for the other to reverse. Neither can move.</div>
+      </div>
+      <div class="ti-box">
+        <div class="ti-label">Exam relevance</div>
+        <div class="ti-body">Given a schedule, you must build a WFG and declare: deadlock or no deadlock? That's the core question.</div>
+      </div>
+    </div>
+    <div class="alert aw" style="margin-top:14px"><i class="ti ti-alert-triangle" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>Common mistake: confusing deadlock <strong style="color:#ef9f27">prevention</strong> (wait-die, wound-wait) with deadlock <strong style="color:#ef9f27">detection</strong> (WFG). Your exam is about detection — checking if a deadlock already exists in a given schedule.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wait-for Graph — the 3-step algorithm</div>
+    <div class="card-sub">Memorize this sequence. Exams follow it exactly.</div>
+    <div class="trio">
+      <div class="ti-box" style="border-color:#534ab7">
+        <div class="ti-label" style="color:#7f77dd">Step 1</div>
+        <div class="ti-body">Create one node for each transaction. (T1, T2, T3…)</div>
+      </div>
+      <div class="ti-box" style="border-color:#534ab7">
+        <div class="ti-label" style="color:#7f77dd">Step 2</div>
+        <div class="ti-body">For each Lock() call, if that item is already locked by Tj, draw an arrow <strong style="color:#afa9ec">Ti → Tj</strong>.</div>
+      </div>
+      <div class="ti-box" style="border-color:#534ab7">
+        <div class="ti-label" style="color:#7f77dd">Step 3</div>
+        <div class="ti-body">Detect a cycle → Deadlock. No cycle → No deadlock.</div>
+      </div>
+    </div>
+    <div class="alert ai" style="margin-top:12px">Arrow direction means: <strong style="color:#afa9ec">Ti is waiting FOR Tj</strong>. So T1→T2 means "T1 is blocked waiting for T2 to release its lock."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Interactive WFG — click a node to inspect it</div>
+    <div class="card-sub">Left side: deadlock cycle. Right side: no cycle.</div>
+    <div class="wfg-wrap">
+      <svg class="wfg-svg" viewBox="0 0 560 210" role="img">
+        <title>Wait-for graph with deadlock example on left and no-deadlock on right</title>
+        <desc>T1 and T2 point to each other (cycle = deadlock). T3 and T4 point only to T2-right (no cycle = no deadlock).</desc>
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <circle cx="100" cy="90" r="34" fill="#2d2660" stroke="#7f77dd" stroke-width="1.5" style="cursor:pointer" onclick="wfgInfo('T1 requests Lock(baly) at t5 — but baly is already held by T2. So T1 must wait. Arrow: T1 → T2.')"/>
+        <text x="100" y="95" text-anchor="middle" font-size="15" font-weight="500" fill="#afa9ec">T1</text>
+        <circle cx="260" cy="90" r="34" fill="#2d2660" stroke="#7f77dd" stroke-width="1.5" style="cursor:pointer" onclick="wfgInfo('T2 requests Lock(balx) at t7 — but balx is already held by T1. So T2 must wait. Arrow: T2 → T1. Both arrows exist = CYCLE = DEADLOCK.')"/>
+        <text x="260" y="95" text-anchor="middle" font-size="15" font-weight="500" fill="#afa9ec">T2</text>
+        <path d="M132 74 C178 42, 218 42, 228 74" fill="none" stroke="#7f77dd" stroke-width="1.5" marker-end="url(#ar)"/>
+        <path d="M228 106 C182 138, 142 138, 132 106" fill="none" stroke="#7f77dd" stroke-width="1.5" marker-end="url(#ar)"/>
+        <text x="180" y="34" text-anchor="middle" font-size="11" fill="#7f77dd">T1 waits for T2</text>
+        <text x="180" y="152" text-anchor="middle" font-size="11" fill="#7f77dd">T2 waits for T1</text>
+        <rect x="120" y="162" width="120" height="22" rx="6" fill="#1c0f0f" stroke="#a32d2d" stroke-width="0.5"/>
+        <text x="180" y="177" text-anchor="middle" font-size="12" fill="#f09595" font-weight="500">Cycle = DEADLOCK</text>
+
+        <circle cx="400" cy="60" r="28" fill="#0d1e18" stroke="#0f6e56" stroke-width="1.5" style="cursor:pointer" onclick="wfgInfo('T3 waits for T2 (right) for data item t. But T2 does not wait for T3. No return arrow, so no cycle. No deadlock for T3.')"/>
+        <text x="400" y="65" text-anchor="middle" font-size="14" font-weight="500" fill="#5dcaa5">T3</text>
+        <circle cx="400" cy="148" r="28" fill="#0d1e18" stroke="#0f6e56" stroke-width="1.5" style="cursor:pointer" onclick="wfgInfo('T4 waits for T2 (right) for data item t. But T2 does not wait for T4. No return arrow, so no cycle. No deadlock for T4.')"/>
+        <text x="400" y="153" text-anchor="middle" font-size="14" font-weight="500" fill="#5dcaa5">T4</text>
+        <circle cx="510" cy="104" r="28" fill="#2d2660" stroke="#534ab7" stroke-width="1.5"/>
+        <text x="510" y="109" text-anchor="middle" font-size="14" font-weight="500" fill="#afa9ec">T2</text>
+        <path d="M426 72 L483 93" fill="none" stroke="#0f6e56" stroke-width="1.5" marker-end="url(#ar)"/>
+        <path d="M426 138 L483 116" fill="none" stroke="#0f6e56" stroke-width="1.5" marker-end="url(#ar)"/>
+        <rect x="436" y="99" width="82" height="22" rx="6" fill="#0d1a0d" stroke="#3b6d11" stroke-width="0.5"/>
+        <text x="477" y="114" text-anchor="middle" font-size="11" fill="#97c459" font-weight="500">No deadlock</text>
+      </svg>
+    </div>
+    <div id="wfg-info"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recovery from deadlock — 3 factors</div>
+    <div class="card-sub">Once detected, one transaction must be killed (rolled back)</div>
+    <div class="trio">
+      <div class="ti-box">
+        <div class="ti-label" style="color:#d4a84a">Factor 1 — Victim choice</div>
+        <div class="ti-body">Kill the "cheapest" transaction: younger (ran less time), fewer items already updated, fewer items still to update. Minimize damage.</div>
+      </div>
+      <div class="ti-box">
+        <div class="ti-label" style="color:#d4a84a">Factor 2 — How far to rollback</div>
+        <div class="ti-body">Simplest: full rollback (undo everything). More efficient: partial rollback (undo just enough to break the deadlock).</div>
+      </div>
+      <div class="ti-box">
+        <div class="ti-label" style="color:#d4a84a">Factor 3 — Avoid starvation</div>
+        <div class="ti-body">Never keep killing the same transaction. DBMS tracks a victim count per transaction. After a threshold, it must pick someone else.</div>
+      </div>
+    </div>
+    <div class="alert aw" style="margin-top:12px"><i class="ti ti-alert-triangle" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>Starvation fix = <strong style="color:#ef9f27">timestamping</strong>. On restart, the transaction keeps its ORIGINAL timestamp — it ages over time, gaining priority. Never assign a new timestamp on restart.</div>
+  </div>
+</div>
+
+<div id="sec-recovery" class="section">
+  <span class="stag">Week 7 — Checkpoint, Update Methods, DBMS Actions</span>
+
+  <div class="card">
+    <div class="card-title">Why recovery is needed — the big picture</div>
+    <div class="card-sub">Understanding the problem makes the solutions obvious</div>
+    <div class="trio">
+      <div class="ti-box">
+        <div class="ti-label">The problem</div>
+        <div class="ti-body">Data doesn't go directly from a transaction to disk. It sits in a RAM buffer first. A crash between buffer and disk = data loss.</div>
+      </div>
+      <div class="ti-box">
+        <div class="ti-label">Analogy</div>
+        <div class="ti-body">Typing a document (RAM) then hitting Save (disk). Crash before Save = work lost. Recovery is the auto-save system for your database.</div>
+      </div>
+      <div class="ti-box">
+        <div class="ti-label">Recovery manager's goal</div>
+        <div class="ti-body">Guarantee <strong style="color:#c5c1dd">Atomicity</strong> (all-or-nothing) and <strong style="color:#c5c1dd">Durability</strong> (committed data survives crashes) using logs, checkpoints, rollback, and rollforward.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Checkpoint — the game save point</div>
+    <div class="card-sub">Forces all RAM data to disk permanently</div>
+    <p style="font-size:13px;line-height:1.6;color:#c5c1dd;margin-bottom:12px">Without checkpoints, a crash requires replaying every transaction from the beginning. With checkpoints, only replay from the last checkpoint. Three things happen at a checkpoint:</p>
+    <div class="trio">
+      <div class="ti-box" style="border-color:#0f6e56">
+        <div class="ti-label" style="color:#5dcaa5">1</div>
+        <div class="ti-body">All log records in memory → written to secondary storage (disk).</div>
+      </div>
+      <div class="ti-box" style="border-color:#0f6e56">
+        <div class="ti-label" style="color:#5dcaa5">2</div>
+        <div class="ti-body">All modified database buffers → force-written to secondary storage.</div>
+      </div>
+      <div class="ti-box" style="border-color:#0f6e56">
+        <div class="ti-label" style="color:#5dcaa5">3</div>
+        <div class="ti-body">A checkpoint record → written to the log (lists all active transactions at this moment).</div>
+      </div>
+    </div>
+    <div class="alert aw" style="margin-top:12px">Checkpoints are ONLY relevant in <strong style="color:#ef9f27">Deferred Update</strong> mode. In Immediate Update, data is already on disk so checkpoints don't change the recovery logic.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Immediate vs Deferred Update</div>
+    <div class="card-sub">The most exam-tested concept — students who confuse these lose the most marks</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th></th><th>Immediate Update</th><th>Deferred Update</th></tr>
+        <tr><td style="font-weight:500;color:#e8e6f0">When data hits disk</td><td>As soon as WRITE is issued</td><td>Only when a CHECKPOINT appears</td></tr>
+        <tr><td style="font-weight:500;color:#e8e6f0">Speed</td><td>Slower (frequent disk writes)</td><td>Faster (batch writes at checkpoint)</td></tr>
+        <tr><td style="font-weight:500;color:#e8e6f0">Data loss risk on crash</td><td>Less — data is always on disk</td><td>More — data may be in RAM only</td></tr>
+        <tr><td style="font-weight:500;color:#e8e6f0">The lorry analogy</td><td>Lorry takes one item at a time, constantly moving</td><td>Lorry waits for ALL items, then drives once</td></tr>
+      </table>
+    </div>
+    <div class="alert ad" style="margin-top:10px"><i class="ti ti-alert-circle" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>Critical insight: In Deferred Update, a transaction can <strong style="color:#f09595">COMMIT</strong> but its data is still only in RAM. This exact scenario triggers ROLLFORWARD.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">DBMS action at failure — the decision tables</div>
+    <div class="card-sub">The most direct exam question type. Learn the logic, not just the answer.</div>
+    <div class="stabs">
+      <button class="stab active" onclick="showSP('im','rec')">Immediate Update</button>
+      <button class="stab" onclick="showSP('def','rec')">Deferred Update</button>
+    </div>
+    <div id="rec-im" class="sp active">
+      <div class="alert ai" style="margin-bottom:10px">Logic: data is always on disk. Ask: <strong style="color:#afa9ec">"Was the transaction still running at failure time?"</strong></div>
+      <div class="table-wrap"><table>
+        <tr><th>Transaction status at failure</th><th>Action</th><th>Why</th></tr>
+        <tr><td style="color:#e8e6f0">Not started yet</td><td><span class="tag t-no">Nothing</span></td><td>No effect on database at all</td></tr>
+        <tr><td style="color:#e8e6f0">Running (not committed)</td><td><span class="tag t-rb">Rollback</span></td><td>Partial writes are on disk — must undo incomplete changes to restore consistency</td></tr>
+        <tr><td style="color:#e8e6f0">Completed (committed)</td><td><span class="tag t-no">Nothing</span></td><td>Data is on disk, transaction is done — nothing to change</td></tr>
+      </table></div>
+    </div>
+    <div id="rec-def" class="sp">
+      <div class="alert ai" style="margin-bottom:10px">Logic: data only hits disk at checkpoints. Ask: <strong style="color:#afa9ec">"Was there a checkpoint? Was it before or after the commit?"</strong></div>
+      <div class="table-wrap"><table>
+        <tr><th>Transaction status at failure</th><th>Action</th><th>Why</th></tr>
+        <tr><td style="color:#e8e6f0">Not started yet</td><td><span class="tag t-no">Nothing</span></td><td>No effect at all</td></tr>
+        <tr><td style="color:#e8e6f0">Running, no checkpoint yet</td><td><span class="tag t-no">Nothing</span></td><td>Data never reached disk — database is unchanged from before transaction started</td></tr>
+        <tr><td style="color:#e8e6f0">Committed, no checkpoint after commit</td><td><span class="tag t-rf">Rollforward</span></td><td>Transaction succeeded but data is in RAM only (wiped by crash). Must redo all operations to re-save to disk.</td></tr>
+        <tr><td style="color:#e8e6f0">Running, checkpoint happened mid-transaction</td><td><span class="tag t-rb">Rollback</span></td><td>Partial data made it to disk at checkpoint, but transaction never committed — must undo partial writes</td></tr>
+        <tr><td style="color:#e8e6f0">Committed AND checkpoint after commit</td><td><span class="tag t-no">Nothing</span></td><td>Data is safely on disk, transaction fully complete</td></tr>
+      </table></div>
+      <div class="alert aw" style="margin-top:10px"><strong style="color:#ef9f27">Rollforward</strong> = redo. Trigger: committed transaction + no checkpoint after commit. Re-executes all operations to save data permanently.</div>
+    </div>
+  </div>
+</div>
+
+<div id="sec-distributed" class="section">
+  <span class="stag">Week 8 — Centralized vs Distributed DB, Data Delivery Alternatives</span>
+
+  <div class="card">
+    <div class="card-title">DDB, D-DBMS, and DDBS — three terms students mix up</div>
+    <div class="card-sub">Learn the hierarchy first: DDBS = DDB + D-DBMS</div>
+    <div class="trio">
+      <div class="ti-box" style="border-color:#534ab7">
+        <div class="ti-label" style="color:#7f77dd">DDB — the data</div>
+        <div class="ti-body">Multiple logically interrelated databases distributed over a network. The data only — no management software included.</div>
+      </div>
+      <div class="ti-box" style="border-color:#534ab7">
+        <div class="ti-label" style="color:#7f77dd">D-DBMS — the software</div>
+        <div class="ti-body">Software that manages the DDB and makes distribution transparent to users. Examples: Oracle, SQL Server, MySQL, MongoDB, PostgreSQL.</div>
+      </div>
+      <div class="ti-box" style="border-color:#534ab7">
+        <div class="ti-label" style="color:#7f77dd">DDBS — the full system</div>
+        <div class="ti-body">DDB + D-DBMS combined. The complete distributed database system. Formula: <code>DDBS = DDB + D-DBMS</code></div>
+      </div>
+    </div>
+    <div class="alert aw" style="margin-top:12px"><i class="ti ti-alert-triangle" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>What is NOT a DDBS: (1) a timesharing system, (2) a tightly-coupled multiprocessor with shared memory, (3) a centralized database on a network node — one DB, many clients accessing it.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Data Delivery Alternatives — the 3-dimension framework</div>
+    <div class="card-sub">How data travels from server to client: mode × frequency × reach</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Dimension</th><th>Type</th><th>Who initiates / when</th><th>Real example</th></tr>
+        <tr><td rowspan="3" style="font-weight:500;color:#e8e6f0;vertical-align:top;padding-top:16px">Delivery Mode</td><td><span class="badge b-p">Pull-only</span></td><td>Client requests → server responds</td><td>Checking Ufone balance, Google search</td></tr>
+        <tr><td><span class="badge b-t">Push-only</span></td><td>Server sends without being asked</td><td>Windows updates, antivirus updates</td></tr>
+        <tr><td><span class="badge b-a">Hybrid</span></td><td>Client subscribes, server pushes future updates</td><td>News alert subscription</td></tr>
+        <tr><td rowspan="3" style="font-weight:500;color:#e8e6f0;vertical-align:top;padding-top:16px">Frequency</td><td><span class="badge b-p">Periodic</span></td><td>Regular, pre-scheduled intervals</td><td>Daily Hadith SMS, stock price each morning</td></tr>
+        <tr><td><span class="badge b-t">Conditional</span></td><td>Triggered when a condition is met</td><td>Bank SMS on debit, email on new device login</td></tr>
+        <tr><td><span class="badge b-a">Ad-hoc</span></td><td>Irregular, whenever the client wants</td><td>Google query any time, irregular promo push</td></tr>
+        <tr><td rowspan="2" style="font-weight:500;color:#e8e6f0;vertical-align:top;padding-top:16px">Communication</td><td><span class="badge b-p">Uni-cast</span></td><td>One server → one specific client</td><td>Bank SMS to your account only</td></tr>
+        <tr><td><span class="badge b-t">One-to-many</span></td><td>One server → many clients</td><td>Telecom package offer to all city users</td></tr>
+      </table>
+    </div>
+    <div class="alert ai" style="margin-top:10px">Exam tip: questions often combine all three. "School sends monthly reports to all grade-10 parents automatically" = <strong style="color:#afa9ec">Push-only + Periodic + One-to-many</strong>.</div>
+  </div>
+</div>
+
+<div id="sec-fragmentation" class="section">
+  <span class="stag">Week 9–10 — Fragmentation: Horizontal, Vertical, Correctness Rules</span>
+
+  <div class="card">
+    <div class="card-title">3 Correctness Rules — tested on every fragmentation question</div>
+    <div class="card-sub">Understand WHY each rule exists, not just its name</div>
+    <div class="trio">
+      <div class="ti-box" style="border-color:#3b6d11">
+        <div class="ti-label" style="color:#97c459">Completeness</div>
+        <div class="ti-body" style="font-size:13px">Every record in the original table must belong to at least one fragment. No record can fall through the gaps.<br><br><strong style="color:#c5c1dd">Test:</strong> Can I find every row somewhere in a fragment?</div>
+      </div>
+      <div class="ti-box" style="border-color:#185fa5">
+        <div class="ti-label" style="color:#85b7eb">Reconstruction</div>
+        <div class="ti-body" style="font-size:13px">No fragment should accept a record that is INVALID for the original table. Fragments must respect the table's constraints.<br><br><strong style="color:#c5c1dd">Test:</strong> Would an invalid record sneak into any fragment?</div>
+      </div>
+      <div class="ti-box" style="border-color:#993c1d">
+        <div class="ti-label" style="color:#f0997b">Disjointness</div>
+        <div class="ti-body" style="font-size:13px">Each record must belong to ONE and only ONE fragment. No duplicates across fragments.<br><br><strong style="color:#c5c1dd">Test:</strong> Does any record appear in more than one fragment?</div>
+      </div>
+    </div>
+    <div class="alert ad" style="margin-top:12px"><i class="ti ti-alert-circle" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>Most common violation: <strong style="color:#f09595">Disjointness</strong>. Using <code>City != 'ISB'</code> as a condition overlaps with other fragments. Always check for overlapping conditions between fragments.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Horizontal, Derived & Vertical Fragmentation</div>
+    <div class="card-sub">Three types — know when each applies</div>
+    <div class="stabs">
+      <button class="stab active" onclick="showSP('primary','frag')">Primary Horizontal</button>
+      <button class="stab" onclick="showSP('derived','frag')">Derived Horizontal</button>
+      <button class="stab" onclick="showSP('vertical','frag')">Vertical</button>
+    </div>
+    <div id="frag-primary" class="sp active">
+      <p style="font-size:13px;line-height:1.6;color:#c5c1dd;margin-bottom:12px">Fragment a relation using predicates defined <strong style="color:#e8e6f0">on that same relation</strong>. When fragments involve multiple columns, use <strong style="color:#e8e6f0">minterms</strong> to avoid Disjointness violations.</p>
+      <div class="table-wrap"><table>
+        <tr><th>Step</th><th>Action</th></tr>
+        <tr><td style="color:#e8e6f0;font-weight:500">1</td><td>List all predicates (P1, P2…) from the application queries — the WHERE clause conditions</td></tr>
+        <tr><td style="color:#e8e6f0;font-weight:500">2</td><td>Create minterms = AND-combinations of predicates: P1∧P2, P1∧P3, P2∧P3…</td></tr>
+        <tr><td style="color:#e8e6f0;font-weight:500">3</td><td>Discard minterms with 0 records, and skip duplicates (P1∧P2 = P2∧P1)</td></tr>
+        <tr><td style="color:#e8e6f0;font-weight:500">4</td><td>Each remaining valid minterm becomes one fragment</td></tr>
+        <tr><td style="color:#e8e6f0;font-weight:500">5</td><td>Stop when all original records are covered</td></tr>
+      </table></div>
+      <div class="alert aw" style="margin-top:10px">P1∧P2 and P2∧P1 are the SAME minterm. Evaluate once, skip the reverse. A common time-waster in exams.</div>
+    </div>
+    <div id="frag-derived" class="sp">
+      <p style="font-size:13px;line-height:1.6;color:#c5c1dd;margin-bottom:12px">Fragment relation R using predicates defined on a <strong style="color:#e8e6f0">different relation S</strong> (related via foreign key). Used when you want to co-locate related rows from child tables alongside the parent.</p>
+      <div class="alert ai" style="margin-bottom:12px">Procedure: (1) Perform Primary Horizontal Fragmentation on relation S to get minterms. (2) Semi-join each minterm with relation R. Each semi-join result = one derived fragment of R.</div>
+      <div class="ti-box" style="margin-top:4px">
+        <div class="ti-label">Semi-join notation</div>
+        <div class="ti-body"><code>Project ▷ m2</code> means: keep only Project rows whose EmpNo appears in minterm m2 of Employee. Employee fragments → then Project fragments based on those.</div>
+      </div>
+    </div>
+    <div id="frag-vertical" class="sp">
+      <p style="font-size:13px;line-height:1.6;color:#c5c1dd;margin-bottom:12px">Split a table by <strong style="color:#e8e6f0">columns</strong>, not rows. Each fragment contains a subset of columns + the primary key (always mandatory).</p>
+      <div class="trio">
+        <div class="ti-box">
+          <div class="ti-label">Why include the PK?</div>
+          <div class="ti-body">Without the primary key, you can't join the fragments back together to reconstruct the original table. PK is the link.</div>
+        </div>
+        <div class="ti-box">
+          <div class="ti-label">Affinity matrix</div>
+          <div class="ti-body">Shows how often column pairs appear together in queries. High affinity = put those columns in the same fragment for efficiency.</div>
+        </div>
+        <div class="ti-box">
+          <div class="ti-label">How to build it</div>
+          <div class="ti-body">Sum each query's execution count across all sites = total frequency. For each column pair, sum frequencies of all queries that use BOTH columns.</div>
+        </div>
+      </div>
+      <div class="alert aw" style="margin-top:10px">Disjointness does NOT apply to columns in vertical fragmentation — the primary key legitimately appears in every fragment. Disjointness only strictly applies to rows in horizontal fragmentation.</div>
+    </div>
+  </div>
+</div>
+
+<div id="sec-quiz" class="section">
+  <span class="stag">Active Recall Quiz — exam-style questions</span>
+  <div id="qwrap"></div>
+</div>
+
+</div>
+
+<script>
+function showSec(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='quiz') initQuiz();
+}
+function wfgInfo(msg){
+  const el=document.getElementById('wfg-info');
+  el.textContent=msg;
+  el.style.display='block';
+}
+function showSP(name,group){
+  const parent=group==='rec'?document.getElementById('sec-recovery'):document.getElementById('sec-fragmentation');
+  parent.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));
+  parent.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(group+'-'+name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+const Qs=[
+  {q:"T1 locks X, T2 locks Y. Then T1 requests Y and T2 requests X. What does the Wait-for Graph look like?",opts:["T1→T2 only (no deadlock)","T1→T2 and T2→T1 (deadlock)","T2→T1 only (no deadlock)","No edges at all"],ans:1,exp:"T1 waits for Y held by T2 → T1→T2. T2 waits for X held by T1 → T2→T1. Both arrows exist, forming a cycle = DEADLOCK."},
+  {q:"In DEFERRED UPDATE, a transaction committed successfully. A failure occurs before any checkpoint appears after the commit. What does the DBMS do?",opts:["Nothing — commit guarantees safety","Rollback — undo the transaction","Rollforward — redo the transaction","Wait for the next checkpoint"],ans:2,exp:"Deferred update: data only goes to disk at checkpoints. The transaction committed (correctly finished) but data is still in RAM. The crash wiped RAM. DBMS must ROLLFORWARD (redo) to save those committed changes permanently to disk."},
+  {q:"In IMMEDIATE UPDATE, a transaction has run for 5 minutes and updated 3 items. A system crash occurs. What does the DBMS do?",opts:["Nothing — data is already on disk","Rollback — undo the 3 updates","Rollforward — redo the transaction","Wait for operator instruction"],ans:1,exp:"In immediate update, every WRITE goes directly to disk. The 3 updates ARE on disk. But the transaction never committed — it's incomplete. DBMS must ROLLBACK to undo those partial changes and restore a consistent state."},
+  {q:"Which correctness rule is violated when the same record appears in two different fragments?",opts:["Completeness","Reconstruction","Disjointness","Transparency"],ans:2,exp:"Disjointness requires each record belongs to ONE and only ONE fragment. If record (102, Asad, RWP) appears in both F2 and F3, Disjointness is violated. Completeness is about records being lost. Reconstruction is about invalid records sneaking in."},
+  {q:"In DEFERRED UPDATE, T3 starts after the checkpoint and commits before the failure. What does the DBMS do?",opts:["Nothing","Rollback","Rollforward","Depends on data item count"],ans:2,exp:"T3 committed after the checkpoint — so at checkpoint time, T3's data wasn't saved yet. After commit, no new checkpoint occurred before the crash. Data is in RAM only, wiped by crash. DBMS must ROLLFORWARD (redo) T3 to recover its committed changes."},
+  {q:"Which of the following is NOT a Distributed Database System (DDBS)?",opts:["Oracle managing databases at Lahore, Karachi, and Islamabad nodes","A database on one server accessed by many network clients","Multiple logically interrelated databases over a network","D-DBMS + DDB combined system"],ans:1,exp:"A single database on ONE server accessed by many clients is a CENTRALIZED database — not a DDBS. DDBS requires the database to be distributed across multiple sites. One server + many clients = client-server architecture."},
+  {q:"In vertical fragmentation, what column must always appear in every fragment?",opts:["The most frequently accessed column","The primary key column","The first column of the table","All columns — vertical fragmentation doesn't split columns"],ans:1,exp:"The primary key MUST appear in every vertical fragment. Without it, you cannot join the fragments back together to reconstruct the original table. The PK is the bridge that makes reconstruction possible."},
+  {q:"What is starvation in deadlock recovery?",opts:["A transaction runs too long without finishing","The same transaction is repeatedly chosen as the victim and never completes","The DBMS runs out of memory handling deadlocks","Too many transactions waiting, causing system overload"],ans:1,exp:"Starvation = the same transaction is always picked as the victim, gets rolled back every time, and never makes progress. Fix: timestamping — on restart, the transaction keeps its ORIGINAL (older) timestamp, gains priority over time, and eventually gets protected from being killed."},
+  {q:"A school sends a report to ALL parents every month automatically, without any parent request. What type of delivery is this?",opts:["Pull-only, Periodic, Uni-cast","Push-only, Periodic, One-to-many","Hybrid, Conditional, Uni-cast","Pull-only, Conditional, One-to-many"],ans:1,exp:"Push-only: server (school) sends without any client request. Periodic: every month on a fixed schedule. One-to-many: all parents receive the report simultaneously. If sent to one parent only, it would be Uni-cast."},
+  {q:"Fragments F1 (salary > 12000 and < 25000), F2 (salary >= 25000 and < 50000), F3 (salary >= 50000) are created. An employee with salary exactly 12000 exists. Which rule is violated?",opts:["Disjointness — 12000 is in two fragments","Reconstruction — 12000 is an invalid salary","Completeness — 12000 doesn't belong to any fragment","No rule is violated"],ans:2,exp:"F1 requires salary > 12000 (strictly greater). F2 starts at >= 25000. F3 starts at >= 50000. salary = 12000 satisfies none of the three conditions — it falls through all gaps. This violates COMPLETENESS, which states every original record must belong to some fragment."}
+];
+
+let qi=0,sc=0,done=false;
+function initQuiz(){qi=0;sc=0;done=false;renderQ();}
+function renderQ(){
+  const c=document.getElementById('qwrap');
+  if(qi>=Qs.length){
+    c.innerHTML='<div class="card"><div class="qscore">Quiz complete!<br><strong style="color:#afa9ec">'+sc+' / '+Qs.length+'</strong><br><span style="font-size:14px;color:#6b6884;font-weight:400;display:block;margin-top:6px">Good luck on your exam.</span></div></div>';
+    return;
+  }
+  const q=Qs[qi];
+  c.innerHTML='<div class="card"><div class="qprog">Question '+(qi+1)+' of '+Qs.length+' &nbsp;·&nbsp; Score: '+sc+'</div><div class="quiz-q">'+q.q+'</div><div class="quiz-opts">'+
+    q.opts.map((o,i)=>'<button class="qopt" id="qo'+i+'" onclick="selOpt('+i+')" ><span class="qlet">'+['A','B','C','D'][i]+'</span>'+o+'</button>').join('')+
+    '</div><div id="qfb" style="display:none"></div><button class="qnxt" id="qnxt" onclick="nextQ()">Next question &nbsp;→</button></div>';
+  done=false;
+}
+function selOpt(i){
+  if(done)return;done=true;
+  const q=Qs[qi];
+  document.querySelectorAll('.qopt').forEach((el,j)=>{
+    el.classList.add('dis');
+    if(j===q.ans)el.classList.add('correct');
+    else if(j===i&&i!==q.ans)el.classList.add('wrong');
+  });
+  if(i===q.ans)sc++;
+  const fb=document.getElementById('qfb');
+  fb.style.display='block';
+  fb.className='qfb '+(i===q.ans?'as':'ad');
+  fb.textContent=(i===q.ans?'Correct. ':'Incorrect. ')+q.exp;
+  document.getElementById('qnxt').style.display='inline-block';
+}
+function nextQ(){qi++;done=false;renderQ();}
+</script>
